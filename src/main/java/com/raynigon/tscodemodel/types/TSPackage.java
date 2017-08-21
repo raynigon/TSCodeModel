@@ -1,6 +1,7 @@
 package com.raynigon.tscodemodel.types;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.raynigon.tscodemodel.TSCodeModel;
@@ -18,7 +19,7 @@ public class TSPackage{
     }
 
     public TSPackage Package(String name){
-        return new TSPackage(codeModel, name);
+        return new TSPackage(codeModel, getName()+"/"+name);
     }    
     
     public TSModuleDef Module(String name){
@@ -41,12 +42,11 @@ public class TSPackage{
         return intf;
     }
     
-    
     public String getName(){
         return name;
     }
 
     public List<TSModuleDef> getModules(){
-        return modules;
+        return Collections.unmodifiableList(modules);
     }
 }

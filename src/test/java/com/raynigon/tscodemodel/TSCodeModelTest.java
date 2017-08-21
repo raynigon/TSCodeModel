@@ -41,7 +41,6 @@ public class TSCodeModelTest{
         modelClazz.Attribute("name", TSSimpleType.STRING);
         tscm.build(scb);
         List<String> result = Arrays.asList(scb.getModuleText("Root", "Model").split("\n"));
-        result.forEach(System.out::print);
         List<String> expected = readResource("/Model.ts");
         assertEquals(expected.size(), result.size());
         for(int i=0;i<expected.size();i++){

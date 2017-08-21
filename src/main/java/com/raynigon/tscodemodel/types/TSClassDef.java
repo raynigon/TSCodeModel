@@ -24,6 +24,10 @@ public class TSClassDef extends TSDefClassType implements TSClass{
         extended = extension;
     }
         
+    public void Implement(TSInterface intf){
+        implemented.add(intf);
+    }
+    
     public String getName(){
         return name;
     }

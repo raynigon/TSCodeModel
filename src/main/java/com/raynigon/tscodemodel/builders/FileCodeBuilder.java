@@ -30,6 +30,7 @@ public class FileCodeBuilder extends AbstractCodeBuilder{
     public PrintStream createFile(String pack, String module) throws IOException{
         Path packLoc = root.resolve(pack);
         Path modulePath = packLoc.resolve(module+".ts");
+        Files.createFile(modulePath);
         OutputStream os = new FileOutputStream(modulePath.toFile());
         return new PrintStream(os, true, StandardCharsets.UTF_8.name());
     }
