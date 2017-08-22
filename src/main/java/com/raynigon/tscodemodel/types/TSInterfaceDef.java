@@ -43,13 +43,6 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
         //TODO Methods
         ps.println("}");
     }*/
-
-    
-
-    @Override
-    protected TSAttribute createAttribute(String name, TSType type){
-        return new TSAttribute(this, name, type);
-    }   
     
     public void Extend(TSInterface extension){
         extensions.add(extension);

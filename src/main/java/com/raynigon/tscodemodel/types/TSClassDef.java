@@ -38,11 +38,6 @@ public class TSClassDef extends TSDefClassType implements TSClass{
         return module.getName();
     }
 
-    @Override
-    protected TSAttribute createAttribute(String name, TSType type){
-        return new TSAttribute(this, name, type);
-    }
-
 	public TSClass getExtension() {
 		return extended;
 	}

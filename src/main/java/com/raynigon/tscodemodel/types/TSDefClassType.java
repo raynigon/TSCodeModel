@@ -14,7 +14,7 @@ public abstract class TSDefClassType implements TSType{
     }
     
     public TSAttribute Attribute(String name, TSType type){
-        TSAttribute attr = createAttribute(name, type);
+        TSAttribute attr = new TSAttribute(this, name, type);
         attributes.put(name, attr);
         return attr;
     }
@@ -30,7 +30,4 @@ public abstract class TSDefClassType implements TSType{
     public Collection<TSAttribute> getAttributes(){
         return attributes.values();
     }
-    
-    protected abstract TSAttribute createAttribute(String name, TSType type);
-    //protected abstract TSMethod createMethod(String name, TSType type);
 }

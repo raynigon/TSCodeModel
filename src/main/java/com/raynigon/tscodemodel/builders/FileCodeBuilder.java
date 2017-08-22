@@ -60,9 +60,10 @@ public class FileCodeBuilder extends AbstractCodeBuilder{
 
 		@Override
 		public PrintStream createModule(TSModuleDef module) throws IOException {
-			Path packLoc = root.resolve(PathConversionHelper.normalizeModulePath(module.getPackage().getName()));
-	        Path modulePath = packLoc.resolve(module+".ts");
-	        Files.createFile(modulePath);
+			Path packLoc = root.resolve(module.getPackage().getName());
+	        Path modulePath = packLoc.resolve(module.getName()+".ts");
+	        if(!Files.exists(modulePath))
+	            Files.createFile(modulePath);
 	        OutputStream os = new FileOutputStream(modulePath.toFile());
 	        return new PrintStream(os, true, StandardCharsets.UTF_8.name());
 		}

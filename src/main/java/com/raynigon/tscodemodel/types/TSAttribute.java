@@ -13,7 +13,7 @@ public class TSAttribute implements TSType{
         parent = inParent;
         name = inName;
         type = inType;
-        visbility = TSVisbility.PRIVATE;
+        visbility = TSVisbility.PUBLIC;
         readonly = false;
     }
 
