@@ -24,5 +24,12 @@ public class TSSimpleType implements TSType{
         return null;
     }
 
-    
+    @Override
+    public boolean equals(Object obj) {
+    	if(!this.getClass().equals(obj.getClass()))
+    		return false;
+    	if(!getName().equals(((TSSimpleType) obj).getName()))
+    		return false;
+    	return true;
+    }
 }

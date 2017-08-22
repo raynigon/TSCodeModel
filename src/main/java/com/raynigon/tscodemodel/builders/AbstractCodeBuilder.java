@@ -1,58 +1,86 @@
 package com.raynigon.tscodemodel.builders;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.raynigon.tscodemodel.types.TSDefType;
+import com.raynigon.tscodemodel.types.TSAttribute;
+import com.raynigon.tscodemodel.types.TSClassDef;
+import com.raynigon.tscodemodel.types.TSDefClassType;
+import com.raynigon.tscodemodel.types.TSInterfaceDef;
 import com.raynigon.tscodemodel.types.TSModuleDef;
-import com.raynigon.tscodemodel.types.TSSimpleType;
+import com.raynigon.tscodemodel.types.TSPackage;
 import com.raynigon.tscodemodel.types.TSType;
 
 public abstract class AbstractCodeBuilder implements TSCodeBuilder{
+		
+	@Override
+	public void build(List<TSPackage> packages) throws IOException {
+		//TODO sort Packages
+		for(TSPackage pack : packages){
+			getModuleCodeBuilder().createPackage(pack);
+			buildModules(pack.getModules());
+		}
+	}
+	
+    private void buildModules(List<TSModuleDef> modules) throws IOException {
+    	for(TSModuleDef module : modules){
+			PrintStream ps = getModuleCodeBuilder().createModule(module);
+			buildImports(module, ps);
+			buildClassTypes(module.getDeclarations(), ps);
+			
+			getModuleCodeBuilder().flushModule(module);
+		}
+	}
 
-    @Override
-    public void buildModule(PrintStream ps, TSModuleDef item){
-        List<TSDefType> declarations = item.getDeclarations();
+	private void buildImports(TSModuleDef module, PrintStream ps) {
+		List<TSDefClassType> declarations = module.getDeclarations();
         List<TSType> usages = new ArrayList<>();
-        for(TSDefType decl : declarations){
-            usages.addAll(decl.determineUsages());
+        for(TSDefClassType decl : declarations){
+            usages.addAll(determineUsages(decl));
         }
         usages = usages.stream().filter((inType)->{
             return !declarations.stream().anyMatch((declType)->{
                return inType.getName().equals(declType.getName());
             });
-        }).collect(Collectors.toList());
-        usages = usages.stream().parallel().filter((usage)->!(usage instanceof TSSimpleType)).collect(Collectors.toList());
-        writeUsages(ps, usages);
-        for(TSDefType decl : declarations){
-            decl.buildSelf(ps);
-        }
-    }
-    
-    protected void writeUsages(PrintStream ps, List<TSType> usages){
-        //TODO add all used types of the same module into one import
-        for(TSType usage : usages){
-            String modulePath = normalizeModulePath(usage.getModulePath());
-            ps.println("import { "+usage.getName()+" } from \""+modulePath+"\";");
-        }
-    }
+        }).filter(FilterHelper::isNotSimpleType).distinct().sorted(FilterHelper::compareTypes).collect(Collectors.toList());
+        getModuleCodeBuilder().createImports(usages, module, ps);
+	}
 
-    private String normalizeModulePath(String modulePath){
-        if(!modulePath.startsWith(".")){
-            if(modulePath.startsWith("/")){
-                modulePath = "."+modulePath;
-            }else{
-                modulePath = "./"+modulePath;
-            }
-        }else{
-            if(!modulePath.startsWith("./")){
-                modulePath = "./" + modulePath.substring(1);
-            }
-        }
-        if(modulePath.endsWith("/"))
-            modulePath = modulePath.substring(0, modulePath.length()-1);
-        return modulePath;
-    }
+	private Collection<TSType> determineUsages(TSDefClassType decl) {
+		List<TSType> usages = new ArrayList<>();
+		for(TSAttribute attr : decl.getAttributes())
+			usages.add(attr.getType());
+		if(decl instanceof TSClassDef){
+			TSClassDef clazz = (TSClassDef) decl;
+			if(clazz.getExtension()!=null)
+				usages.add(clazz.getExtension());
+			if(clazz.getImplementations().size()>0)
+				usages.addAll(clazz.getImplementations());
+		}else if(decl instanceof TSInterfaceDef){
+			TSInterfaceDef clazz = (TSInterfaceDef) decl;
+			if(clazz.getExtensions().size()>0)
+				usages.addAll(clazz.getExtensions());
+		}else{
+			throw new RuntimeException("Unknown Type");
+		}
+		return usages;
+	}
+
+	private void buildClassTypes(List<TSDefClassType> declarations, PrintStream ps) {
+		Collections.sort(declarations, FilterHelper::compareClassTypes);
+		for(TSDefClassType type : declarations){
+			if(type instanceof TSClassDef){
+				getClassCodeBuilder().buildClass(ps, (TSClassDef) type);
+			}else if(type instanceof TSInterfaceDef){
+				getInterfaceCodeBuilder().buildInterface(ps, (TSInterfaceDef) type);
+			}else{
+				throw new RuntimeException("Unknown Class Type");
+			}
+		}
+	}
 }

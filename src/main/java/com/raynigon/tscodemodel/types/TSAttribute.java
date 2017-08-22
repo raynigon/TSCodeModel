@@ -1,20 +1,20 @@
 package com.raynigon.tscodemodel.types;
 
-import java.util.Collections;
-import java.util.Set;
+public class TSAttribute implements TSType{
 
-import com.raynigon.tscodemodel.TSCodeModel;
-
-public abstract class TSAttribute implements TSDefType{
-
-    private TSDefType parent;
+    private TSDefClassType parent;
     private String name;
     private TSType type;
+	private TSVisbility visbility;
+	private boolean readonly;
+	private boolean staticValue;
 
-    public TSAttribute(TSDefType inParent, String inName, TSType inType){
+    public TSAttribute(TSDefClassType inParent, String inName, TSType inType){
         parent = inParent;
         name = inName;
         type = inType;
+        visbility = TSVisbility.PRIVATE;
+        readonly = false;
     }
 
     public String getName(){
@@ -25,7 +25,7 @@ public abstract class TSAttribute implements TSDefType{
         return type;
     }
 
-    public TSDefType getParent(){
+    public TSDefClassType getParent(){
         return parent;
     }
 
@@ -34,13 +34,38 @@ public abstract class TSAttribute implements TSDefType{
         return parent.getModulePath();
     }
 
-    @Override
-    public Set<TSType> determineUsages(){
-        return Collections.singleton(type);
-    }
+	public TSVisbility getVisibility() {
+		return visbility;
+	}
+	
+	public void setVisbility(TSVisbility inVisbility) {
+		visbility = inVisbility;
+	}
 
-    @Override
-    public String getIndent(){
-        return TSCodeModel.getIndent() + parent.getIndent();
-    }
+	public boolean isReadonly() {
+		return readonly;
+	}
+	
+	public void setReadonly(boolean inReadonly) {
+		readonly = inReadonly;
+	}
+
+	public boolean isStatic() {
+		return staticValue;
+	}
+	
+	public void setStatic(boolean value) {
+		staticValue = value;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	   	if(!this.getClass().equals(obj.getClass()))
+	   		return false;
+	   	if(!getName().equals(((TSType) obj).getName()))
+	   		return false;
+	   	if(!getParent().equals(((TSAttribute) obj).getParent()))
+	   		return false;
+	   	return true;
+	}
 }

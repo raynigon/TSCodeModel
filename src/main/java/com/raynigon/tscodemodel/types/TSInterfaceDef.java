@@ -1,11 +1,7 @@
 package com.raynigon.tscodemodel.types;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TSInterfaceDef extends TSDefClassType implements TSInterface{
 
@@ -17,7 +13,6 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
         module = inModule;
         name = inName;
         extensions = new ArrayList<>();
-        
     }
     
     public TSModuleDef getModule(){
@@ -33,13 +28,13 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
         return module.getName();
     }
 
-    @Override
+    /*@Override
     public void buildSelf(PrintStream ps){
         if(isExported())
             ps.print("export ");
         ps.print("interface "+name+" ");
         if(extensions.size()>0){
-            ps.print("implements ");
+            ps.print("extends ");
             List<String> names = extensions.stream().map((intf)->intf.getName()).collect(Collectors.toList());
             ps.print(String.join(",", names));
         }
@@ -47,25 +42,31 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
         buildAttributes(ps);
         //TODO Methods
         ps.println("}");
-    }
+    }*/
 
-    @Override
-    public Set<TSType> determineUsages(){
-        Set<TSType> types = new HashSet<>();
-        types.addAll(extensions);
-        Set<TSType> attrTypes = getAttributes().stream().map((attr)->attr.getType()).collect(Collectors.toSet());
-        types.addAll(attrTypes);
-        return types;
-    }
-
-    @Override
-    public String getIndent(){
-        return "";
-    }
+    
 
     @Override
     protected TSAttribute createAttribute(String name, TSType type){
-        return new TSInterfaceAttribute(this, name, type);
+        return new TSAttribute(this, name, type);
+    }   
+    
+    public void Extend(TSInterface extension){
+        extensions.add(extension);
     }
-   
+
+	public List<TSInterface> getExtensions() {
+		return extensions;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	   	if(!this.getClass().equals(obj.getClass()))
+	   		return false;
+	   	if(!getName().equals(((TSType) obj).getName()))
+	   		return false;
+	   	if(!getModulePath().equals(((TSType) obj).getModulePath()))
+	   		return false;
+	   	return true;
+	}	
 }

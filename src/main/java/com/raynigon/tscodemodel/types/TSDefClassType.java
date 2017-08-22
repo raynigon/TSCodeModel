@@ -1,11 +1,10 @@
 package com.raynigon.tscodemodel.types;
 
-import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TSDefClassType implements TSDefType{
+public abstract class TSDefClassType implements TSType{
 
     private boolean exported = false;
     private Map<String, TSAttribute> attributes;
@@ -27,13 +26,7 @@ public abstract class TSDefClassType implements TSDefType{
     public boolean isExported(){
         return exported;
     }
-    
-    protected void buildAttributes(PrintStream ps){
-        for(TSAttribute attr : attributes.values()){
-            attr.buildSelf(ps);
-        }
-    }
-    
+        
     public Collection<TSAttribute> getAttributes(){
         return attributes.values();
     }

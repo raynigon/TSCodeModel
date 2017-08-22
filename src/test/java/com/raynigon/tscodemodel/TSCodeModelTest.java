@@ -15,8 +15,11 @@ import static org.junit.Assert.*;
 
 import com.raynigon.tscodemodel.builders.StringCodeBuilder;
 import com.raynigon.tscodemodel.types.TSClassDef;
+import com.raynigon.tscodemodel.types.TSInterfaceDef;
+import com.raynigon.tscodemodel.types.TSModuleDef;
 import com.raynigon.tscodemodel.types.TSPackage;
 import com.raynigon.tscodemodel.types.TSSimpleType;
+import com.raynigon.tscodemodel.types.TSVisbility;
 
 public class TSCodeModelTest{
 
@@ -33,25 +36,50 @@ public class TSCodeModelTest{
     }
 
     @Test
-    public void test() throws IOException{
+    public void testSimpleInterface() throws IOException{
         TSCodeModel tscm = new TSCodeModel();
         TSPackage pack = tscm.Package("Root");
-        TSClassDef modelClazz = pack.Class("Model");
+        TSInterfaceDef modelClazz = pack.Interface("IModel");
         modelClazz.Attribute("autoId", TSSimpleType.NUMBER);
-        modelClazz.Attribute("name", TSSimpleType.STRING);
-        tscm.build(scb);
-        List<String> result = Arrays.asList(scb.getModuleText("Root", "Model").split("\n"));
-        List<String> expected = readResource("/Model.ts");
-        assertEquals(expected.size(), result.size());
-        for(int i=0;i<expected.size();i++){
-            assertEquals(expected.get(i), result.get(i));
-        }
+        
+        checkResult(tscm, "IModel");
     }
 
+    @Test
+    public void testInterfacesInheritance() throws IOException{
+        TSCodeModel tscm = new TSCodeModel();
+        TSPackage pack = tscm.Package("Root");
+        TSModuleDef module = pack.Module("User");
+        TSInterfaceDef modelIntf = module.Interface("IUser");
+        modelIntf.setExport(true);
+        modelIntf.Extend(tscm.ReferenceInterface(pack, "IModel", "IModel"));
+        modelIntf.Attribute("name", TSSimpleType.STRING);
+        TSClassDef modelClazz = module.Class("User");
+        modelClazz.setExport(true);
+        modelClazz.Implement(modelIntf);
+        modelClazz.Attribute("autoId", TSSimpleType.NUMBER).setVisbility(TSVisbility.PUBLIC);
+        modelClazz.Attribute("name", TSSimpleType.STRING).setVisbility(TSVisbility.PUBLIC);
+        
+        checkResult(tscm, "User");
+    }
+    
     private List<String> readResource(String string) throws IOException{
         InputStream is = TSCodeModelTest.class.getResourceAsStream(string);
         String text = IOUtils.toString(is, StandardCharsets.UTF_8);
         return Arrays.asList(text.split("\n"));
     }
+    
+	private void checkResult(TSCodeModel tscm, String moduleName) throws IOException {
+		tscm.build(scb);
+		String moduleContent = scb.getModuleText("Root", moduleName);
+		System.out.println("TS-Output:\n"+moduleContent+"\n");
+		List<String> result = Arrays.asList(moduleContent.split("\n"));
+        List<String> expected = readResource("/"+moduleName+".ts");
+        assertEquals(expected.size(), result.size());
+        for(int i=0;i<expected.size();i++){
+            assertEquals(expected.get(i).trim(), result.get(i).trim());
+        }
+	}
+
 
 }

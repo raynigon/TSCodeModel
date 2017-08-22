@@ -41,7 +41,7 @@ public class TSModuleDef implements TSModule{
         return intf;
     }
 
-    public List<TSDefType> getDeclarations(){
+    public List<TSDefClassType> getDeclarations(){
         return new ArrayList<>(defTypes.values());
     }
 }

@@ -1,15 +1,17 @@
 package com.raynigon.tscodemodel.builders;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.util.List;
 
-import com.raynigon.tscodemodel.types.TSModuleDef;
+import com.raynigon.tscodemodel.builders.classes.TSClassCodeBuilder;
+import com.raynigon.tscodemodel.builders.interfaces.TSInterfaceCodeBuilder;
+import com.raynigon.tscodemodel.builders.modules.TSModuleCodeBuilder;
+import com.raynigon.tscodemodel.types.TSPackage;
 
 public interface TSCodeBuilder{
 
-    void createFolder(String name) throws IOException;
-
-    PrintStream createFile(String pack, String module) throws IOException;
-
-    void buildModule(PrintStream os, TSModuleDef item);
+	void build(List<TSPackage> packages) throws IOException;
+	TSModuleCodeBuilder getModuleCodeBuilder();
+	TSClassCodeBuilder getClassCodeBuilder();
+	TSInterfaceCodeBuilder getInterfaceCodeBuilder();
 }
