@@ -7,7 +7,10 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.builders.classes.AbstractTSClassCodeBuilder;
 import com.raynigon.tscodemodel.builders.classes.TSClassCodeBuilder;
 import com.raynigon.tscodemodel.builders.interfaces.AbstractInterfaceCodeBuilder;
@@ -24,10 +27,10 @@ public class FileCodeBuilder extends AbstractCodeBuilder{
 	private ClassCodeBuilder classCodeBuilder;
 	private InterfaceCodeBuilder intfCodeBuilder;
     
-    public FileCodeBuilder(Path inRoot){
-		moduleCodeBuilder = new ModuleCodeBuilder();
-		classCodeBuilder = new ClassCodeBuilder();
-		intfCodeBuilder = new InterfaceCodeBuilder();
+    public FileCodeBuilder(Path inRoot, TSCodeModel inCodeModel){
+		moduleCodeBuilder = new ModuleCodeBuilder(inCodeModel);
+		classCodeBuilder = new ClassCodeBuilder(inCodeModel);
+		intfCodeBuilder = new InterfaceCodeBuilder(inCodeModel);
         root = inRoot;
     }
     
@@ -52,7 +55,14 @@ public class FileCodeBuilder extends AbstractCodeBuilder{
     
     class ModuleCodeBuilder extends AbstractModuleCodeBuilder{
 
-		@Override
+        private Map<TSModuleDef, OutputStream> osmap;
+        
+		public ModuleCodeBuilder(TSCodeModel inCodeModel){
+            super(inCodeModel);
+            osmap = new HashMap<>();
+        }
+
+        @Override
 		public void createPackage(TSPackage pack) throws IOException {
 			Path folder = root.resolve(PathConversionHelper.normalizeModulePath(pack.getName()));
 	        Files.createDirectories(folder);
@@ -60,21 +70,41 @@ public class FileCodeBuilder extends AbstractCodeBuilder{
 
 		@Override
 		public PrintStream createModule(TSModuleDef module) throws IOException {
+		    codeModel.getLogger().debug("Create Module %s", module.getName());
 			Path packLoc = root.resolve(module.getPackage().getName());
 	        Path modulePath = packLoc.resolve(module.getName()+".ts");
-	        if(!Files.exists(modulePath))
+	        if(!Files.exists(modulePath)){
+	            codeModel.getLogger().debug("Create File %s", modulePath);
 	            Files.createFile(modulePath);
+	        }else{
+	            codeModel.getLogger().debug("File %s already exists", modulePath);
+	        }
 	        OutputStream os = new FileOutputStream(modulePath.toFile());
+	        osmap.put(module, os);
 	        return new PrintStream(os, true, StandardCharsets.UTF_8.name());
 		}
 
 		@Override
 		public void flushModule(TSModuleDef module) throws IOException {
-			// TODO Auto-generated method stub
+		    codeModel.getLogger().debug("Finished Module %s", module.getName());
+			if(!osmap.containsKey(module))
+			    return;
+			OutputStream os = osmap.remove(module);
+			os.close();
 		}
     }
     
-    public static class InterfaceCodeBuilder extends AbstractInterfaceCodeBuilder{}
+    public static class InterfaceCodeBuilder extends AbstractInterfaceCodeBuilder{
+
+        public InterfaceCodeBuilder(TSCodeModel inCodeModel){
+            super(inCodeModel);
+        } 
+    }
     
-    public static class ClassCodeBuilder extends AbstractTSClassCodeBuilder{}
+    public static class ClassCodeBuilder extends AbstractTSClassCodeBuilder{
+
+        public ClassCodeBuilder(TSCodeModel inCodeModel){
+            super(inCodeModel);
+        }
+   }
 }

@@ -6,10 +6,12 @@ import com.raynigon.tscodemodel.types.TSModuleDef;
 
 public class PathConversionHelper {
 
-	public static String convertToRelativePath(String modulePath, TSModuleDef item) {
+	public static String convertToRelativePath(String modulePath, TSModuleDef item) {	    
 		String localModuleName = item.getPackage().getName()+"/"+item.getName();
 		localModuleName = normalizeModulePath(localModuleName);
 		
+		if(!modulePath.startsWith("./"))
+		    modulePath = normalizeModulePath(modulePath);
 		String[] other = modulePath.split("/");
 		String[] self = localModuleName.split("/");
 		int max = Math.min(other.length, self.length);

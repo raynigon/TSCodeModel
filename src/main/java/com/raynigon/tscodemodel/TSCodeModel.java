@@ -10,15 +10,22 @@ import com.raynigon.tscodemodel.builders.TSCodeBuilder;
 import com.raynigon.tscodemodel.types.TSClass;
 import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSPackage;
+import com.raynigon.tscodemodel.types.hidden.DefaultLogger;
 import com.raynigon.tscodemodel.types.hidden.TSRefClass;
 import com.raynigon.tscodemodel.types.hidden.TSRefInterface;
 
 public class TSCodeModel{
 
     private List<TSPackage> packs;
+    private ILogger logger;
     
     public TSCodeModel(){
+        this(new DefaultLogger());
+    }
+    
+    public TSCodeModel(ILogger inLogger){
         packs = new ArrayList<>();
+        logger = new DefaultLogger();
     }
     
     public TSPackage Package(String name){
@@ -29,7 +36,7 @@ public class TSCodeModel{
     
     public void build(Path root) throws IOException{
         System.out.println("Build Path");
-        build(new FileCodeBuilder(root));
+        build(new FileCodeBuilder(root, this));
     }
     
     public void build(TSCodeBuilder codebuilder) throws IOException{
@@ -46,5 +53,9 @@ public class TSCodeModel{
 
     public TSInterface ReferenceInterface(TSPackage modelpack, String moduleName, String interfaceName){
         return new TSRefInterface(modelpack.getName()+"/"+moduleName, interfaceName);
+    }
+    
+    public ILogger getLogger(){
+        return logger;
     }
 }

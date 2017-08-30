@@ -25,7 +25,7 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
     
     @Override
     public String getModulePath(){
-        return module.getName();
+        return "./"+module.getPackage().getName()+"/"+module.getName();
     }
 
     /*@Override

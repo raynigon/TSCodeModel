@@ -11,11 +11,19 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 
 	private static final String ATTRIBUTE_FORMAT = "%s%s: %s;";
 
+	protected TSCodeModel codeModel;
+    
+    public AbstractInterfaceCodeBuilder(TSCodeModel inCodeModel){
+        codeModel = inCodeModel;
+    }
+	
 	@Override
 	public void buildInterface(PrintStream ps, TSInterfaceDef item) {
+	    codeModel.getLogger().debug("Building Interface %s", item.getName());
 		String indent = TSCodeModel.getIndent();
 		ps.println(createHeader(item)+"{");
 		for(TSAttribute attr : item.getAttributes()){
+		    codeModel.getLogger().debug("Add Attribute", attr.getName());
 			ps.println(indent+createAttribute(attr));
 		}
 		/*for(TSMethod method : item.getMethods()){

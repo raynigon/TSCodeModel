@@ -12,11 +12,19 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 	private static final String ATTRIBUTE_DEF_FORMAT = "%s %s%s: %s;";
 	//private static final String ATTRIBUTE_INIT_FORMAT = "%s %s%s: %s = %s;";
 
+	protected TSCodeModel codeModel;
+	
+	public AbstractTSClassCodeBuilder(TSCodeModel inCodeModel){
+        codeModel = inCodeModel;
+    }
+	
 	@Override
 	public void buildClass(PrintStream ps, TSClassDef item) {
+	    codeModel.getLogger().debug("Building Class %s", item.getName());
 		String indent = TSCodeModel.getIndent();
 		ps.println(createHeader(item)+"{");
 		for(TSAttribute attr : item.getAttributes()){
+		    codeModel.getLogger().debug("Add Attribute", attr.getName());
 			ps.println(indent+createAttribute(attr));
 		}
 		/*for(TSMethod method : item.getMethods()){

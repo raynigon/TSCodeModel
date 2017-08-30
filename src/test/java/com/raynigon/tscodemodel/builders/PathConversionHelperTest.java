@@ -21,6 +21,7 @@ public class PathConversionHelperTest {
 	public void relativePathConversionTest(){
 		TSModuleDef md = new TSModuleDef(new TSPackage(null, "PACK0/PACK1/PACK2"), "MODULE.A");
 		assertEquals("./MODULE.B", PathConversionHelper.convertToRelativePath("./PACK0/PACK1/PACK2/MODULE.B", md));
+		assertEquals("./MODULE.B", PathConversionHelper.convertToRelativePath("PACK0/PACK1/PACK2/MODULE.B", md));
 		assertEquals("../PACK3/MODULE.B", PathConversionHelper.convertToRelativePath("./PACK0/PACK1/PACK3/MODULE.B", md));
 	}
 	

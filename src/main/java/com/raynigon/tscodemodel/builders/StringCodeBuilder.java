@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.builders.FileCodeBuilder.ClassCodeBuilder;
 import com.raynigon.tscodemodel.builders.FileCodeBuilder.InterfaceCodeBuilder;
 import com.raynigon.tscodemodel.builders.classes.TSClassCodeBuilder;
@@ -23,11 +24,11 @@ public class StringCodeBuilder extends AbstractCodeBuilder{
 	private ClassCodeBuilder classCodeBuilder;
 	private InterfaceCodeBuilder intfCodeBuilder;
 	
-    public StringCodeBuilder(){
+    public StringCodeBuilder(TSCodeModel inCodeModel){
         streams = new HashMap<>();
-		moduleCodeBuilder = new ModuleCodeBuilder();
-		classCodeBuilder = new ClassCodeBuilder();
-		intfCodeBuilder = new InterfaceCodeBuilder();
+		moduleCodeBuilder = new ModuleCodeBuilder(inCodeModel);
+		classCodeBuilder = new ClassCodeBuilder(inCodeModel);
+		intfCodeBuilder = new InterfaceCodeBuilder(inCodeModel);
     }
 
     @Override
@@ -52,7 +53,11 @@ public class StringCodeBuilder extends AbstractCodeBuilder{
     
     public class ModuleCodeBuilder extends AbstractModuleCodeBuilder{
 
-		@Override
+		public ModuleCodeBuilder(TSCodeModel inCodeModel){
+            super(inCodeModel);
+        }
+
+        @Override
 		public void createPackage(TSPackage pack) throws IOException {
 			// TODO Auto-generated method stub
 			

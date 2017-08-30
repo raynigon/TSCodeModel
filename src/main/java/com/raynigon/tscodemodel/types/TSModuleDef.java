@@ -44,4 +44,10 @@ public class TSModuleDef implements TSModule{
     public List<TSDefClassType> getDeclarations(){
         return new ArrayList<>(defTypes.values());
     }
+    
+    @Override
+    public int hashCode(){
+        String s = getPackage().getName()+"#"+getName();
+        return s.hashCode();
+    }
 }

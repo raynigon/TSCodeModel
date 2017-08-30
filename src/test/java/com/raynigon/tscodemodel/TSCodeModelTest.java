@@ -23,26 +23,28 @@ import com.raynigon.tscodemodel.types.TSVisbility;
 
 public class TSCodeModelTest{
 
+    private TSCodeModel tscm;
     private StringCodeBuilder scb;
     
     @Before
     public void setUp() throws Exception{
-        scb = new StringCodeBuilder();
+        tscm = new TSCodeModel();
+        scb = new StringCodeBuilder(tscm);
     }
 
     @After
     public void tearDown() throws Exception{
+        tscm = null;
         scb = null;
     }
 
     @Test
     public void testSimpleInterface() throws IOException{
-        TSCodeModel tscm = new TSCodeModel();
         TSPackage pack = tscm.Package("Root");
         TSInterfaceDef modelClazz = pack.Interface("IModel");
         modelClazz.Attribute("autoId", TSSimpleType.NUMBER);
         
-        checkResult(tscm, "IModel");
+        checkResult("IModel");
     }
 
     @Test
@@ -60,7 +62,7 @@ public class TSCodeModelTest{
         modelClazz.Attribute("autoId", TSSimpleType.NUMBER).setVisbility(TSVisbility.PUBLIC);
         modelClazz.Attribute("name", TSSimpleType.STRING).setVisbility(TSVisbility.PUBLIC);
         
-        checkResult(tscm, "User");
+        checkResult("User");
     }
     
     private List<String> readResource(String string) throws IOException{
@@ -69,7 +71,7 @@ public class TSCodeModelTest{
         return Arrays.asList(text.split("\n"));
     }
     
-	private void checkResult(TSCodeModel tscm, String moduleName) throws IOException {
+	private void checkResult(String moduleName) throws IOException {
 		tscm.build(scb);
 		String moduleContent = scb.getModuleText("Root", moduleName);
 		System.out.println("TS-Output:\n"+moduleContent+"\n");
