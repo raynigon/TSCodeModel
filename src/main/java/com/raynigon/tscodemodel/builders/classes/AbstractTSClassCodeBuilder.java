@@ -22,7 +22,7 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 	public void buildClass(PrintStream ps, TSClassDef item) {
 	    codeModel.getLogger().debug("Building Class %s", item.getName());
 		String indent = TSCodeModel.getIndent();
-		ps.println(createHeader(item)+"{");
+		ps.println(createHeader(item)+" {");
 		for(TSAttribute attr : item.getAttributes()){
 		    codeModel.getLogger().debug("Add Attribute", attr.getName());
 			ps.println(indent+createAttribute(attr));

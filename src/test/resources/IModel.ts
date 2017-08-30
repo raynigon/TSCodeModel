@@ -1,3 +1,3 @@
-export interface IModel{
+export interface IModel {
     autoId: number;
 }

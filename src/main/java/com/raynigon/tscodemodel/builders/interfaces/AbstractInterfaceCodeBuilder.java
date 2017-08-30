@@ -21,7 +21,7 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 	public void buildInterface(PrintStream ps, TSInterfaceDef item) {
 	    codeModel.getLogger().debug("Building Interface %s", item.getName());
 		String indent = TSCodeModel.getIndent();
-		ps.println(createHeader(item)+"{");
+		ps.println(createHeader(item)+" {");
 		for(TSAttribute attr : item.getAttributes()){
 		    codeModel.getLogger().debug("Add Attribute", attr.getName());
 			ps.println(indent+createAttribute(attr));
