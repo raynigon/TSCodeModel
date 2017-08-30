@@ -35,7 +35,6 @@ public class TSCodeModel{
     }    
     
     public void build(Path root) throws IOException{
-        System.out.println("Build Path");
         build(new FileCodeBuilder(root, this));
     }
     

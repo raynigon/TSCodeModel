@@ -47,7 +47,7 @@ public class StringCodeBuilder extends AbstractCodeBuilder{
     }
     
     public String getModuleText(String pack, String module){
-        ByteArrayOutputStream bos = streams.get("./"+pack+"/"+module);
+        ByteArrayOutputStream bos = streams.get(PathConversionHelper.normalizeModulePath(pack+"/"+module));
         return new String(bos.toByteArray(), StandardCharsets.UTF_8);
     }
     
