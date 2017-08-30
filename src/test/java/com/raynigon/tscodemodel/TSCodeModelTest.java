@@ -49,7 +49,6 @@ public class TSCodeModelTest{
 
     @Test
     public void testInterfacesInheritance() throws IOException{
-        tscm = new TSCodeModel();
         TSPackage pack = tscm.Package("Root");
         TSModuleDef module = pack.Module("User");
         TSInterfaceDef modelIntf = module.Interface("IUser");
