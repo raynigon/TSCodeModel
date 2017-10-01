@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 
 import com.raynigon.tscodemodel.builders.StringCodeBuilder;
 import com.raynigon.tscodemodel.types.TSClassDef;
+import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
 import com.raynigon.tscodemodel.types.TSModuleDef;
 import com.raynigon.tscodemodel.types.TSPackage;
@@ -62,6 +63,16 @@ public class TSCodeModelTest{
         modelClazz.Attribute("name", TSSimpleType.STRING).setVisbility(TSVisbility.PUBLIC);
         
         checkResult("User");
+    }
+    
+    @Test
+    public void testMultipleUsages() throws IOException{
+        TSPackage pack = tscm.Package("Root");
+        TSClassDef userGroup = pack.Class("UserGroup");
+        TSInterface iuser = tscm.ReferenceInterface(pack, "User", "IUser");
+        userGroup.Attribute("administrator", iuser);
+        userGroup.Attribute("users", TSSimpleType.createArray(iuser));
+        checkResult("UserGroup");
     }
     
     private List<String> readResource(String string) throws IOException{

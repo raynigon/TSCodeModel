@@ -32,4 +32,8 @@ public class TSSimpleType implements TSType{
     		return false;
     	return true;
     }
+
+    public static TSArray createArray(TSType arrayType){
+        return new TSArray(arrayType);
+    }
 }
