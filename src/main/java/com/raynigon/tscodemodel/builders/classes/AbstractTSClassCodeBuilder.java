@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.types.TSAttribute;
 import com.raynigon.tscodemodel.types.TSClassDef;
+import com.raynigon.tscodemodel.types.TSInterface;
+import com.raynigon.tscodemodel.types.TSInterfaceDef;
 
 public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 
@@ -21,6 +23,7 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 	@Override
 	public void buildClass(PrintStream ps, TSClassDef item) {
 	    codeModel.getLogger().debug("Building Class %s", item.getName());
+	    checkInterfaces(item);	    
 		String indent = TSCodeModel.getIndent();
 		ps.println(createHeader(item)+" {");
 		for(TSAttribute attr : item.getAttributes()){
@@ -33,7 +36,23 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 		ps.println("}");
 	}
 
-	@Override
+	private void checkInterfaces(TSClassDef item){
+	    if(item.isAbstract())
+	        return;
+        for(TSInterface intf : item.getImplementations()){
+            if(!(intf instanceof TSInterfaceDef))
+                continue;
+            TSInterfaceDef tsintf = (TSInterfaceDef) intf;
+            for(TSAttribute intfAttr : tsintf.getAttributes()){
+                boolean found = item.getAttributes().stream().anyMatch((attr)->attr.getName().equals(intfAttr.getName()));
+                if(found)
+                    continue;
+                codeModel.getLogger().error("The property "+intfAttr.getName()+" is missing in Class "+item.getName());
+            }
+        }
+    }
+
+    @Override
 	public String createHeader(TSClassDef item) {
 		String result = "";
 		if(item.isExported())
