@@ -1,6 +1,6 @@
 package com.raynigon.tscodemodel.types;
 
-public class TSAttribute implements TSType{
+public class TSAttribute implements TSType, TSVar{
 
     private TSDefClassType parent;
     private String name;
@@ -17,10 +17,12 @@ public class TSAttribute implements TSType{
         readonly = false;
     }
 
+    @Override
     public String getName(){
         return name;
     }
     
+    @Override
     public TSType getType(){
         return type;
     }
@@ -68,4 +70,16 @@ public class TSAttribute implements TSType{
 	   		return false;
 	   	return true;
 	}
+
+    @Override
+    public TSStatement call(TSMethod method, TSVar... args){
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public TSStatement call(String methodName, TSVar... args){
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

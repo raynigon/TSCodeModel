@@ -1,18 +1,25 @@
 package com.raynigon.tscodemodel.types;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.management.openmbean.KeyAlreadyExistsException;
 
 public abstract class TSDefClassType implements TSType{
 
+    private TSModuleDef module;
     private boolean exported = false;
     private Map<String, TSAttribute> attributes;
+    protected List<TSMethod> methods;
     
-    public TSDefClassType(){
+    
+    public TSDefClassType(TSModuleDef inModule){
         attributes = new HashMap<>();
+        methods = new ArrayList<>();
+        module = inModule;
     }
     
     public TSAttribute Attribute(String name, TSType type){
@@ -23,6 +30,8 @@ public abstract class TSDefClassType implements TSType{
         return attr;
     }
 
+    public abstract TSMethod Method(String name, TSType returnType);
+    
     public void setExport(boolean value){
         exported = value;
     }
@@ -33,5 +42,9 @@ public abstract class TSDefClassType implements TSType{
         
     public Collection<TSAttribute> getAttributes(){
         return attributes.values();
+    }
+    
+    public TSModuleDef getModule(){
+        return module;
     }
 }

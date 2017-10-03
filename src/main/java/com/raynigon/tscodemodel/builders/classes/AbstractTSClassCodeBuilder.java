@@ -8,6 +8,7 @@ import com.raynigon.tscodemodel.types.TSAttribute;
 import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
+import com.raynigon.tscodemodel.types.TSMethod;
 
 public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 
@@ -82,5 +83,11 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 		 * return String.format(ATTRIBUTE_INIT_FORMAT, visbility, readonly, item.getName(), item.getType().getName(), item.getValue());
 		 * else*/
 		return String.format(ATTRIBUTE_DEF_FORMAT, visbility, prefix, item.getName(), item.getType().getName());
+	}
+	
+	@Override
+	public String createMethodHeader(TSMethod item){
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 }

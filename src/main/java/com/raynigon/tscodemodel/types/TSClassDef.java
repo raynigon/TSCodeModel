@@ -5,14 +5,13 @@ import java.util.List;
 
 public class TSClassDef extends TSDefClassType implements TSClass{
 
-    private TSModuleDef module;
     private String name;
     private TSClass extended;
     private List<TSInterface> implemented;
 	private boolean abstractClass;
     
     public TSClassDef(TSModuleDef inModule, String inName){
-        module = inModule;
+        super(inModule);
         name = inName;
         implemented = new ArrayList<>();
     }
@@ -25,17 +24,19 @@ public class TSClassDef extends TSDefClassType implements TSClass{
         implemented.add(intf);
     }
     
-    public String getName(){
-        return name;
+    public TSMethod Constructor(){
+        TSMethod tsmethod = new TSMethodCtor(this);
+        methods.add(tsmethod);
+        return tsmethod;
     }
     
-    public TSModuleDef getModule(){
-        return module;
+    public String getName(){
+        return name;
     }
 
     @Override
     public String getModulePath(){
-        return "./"+module.getPackage().getName()+"/"+module.getName();
+        return "./"+getModule().getPackage().getName()+"/"+getModule().getName();
     }
 
 	public TSClass getExtension() {
@@ -64,4 +65,11 @@ public class TSClassDef extends TSDefClassType implements TSClass{
 	   		return false;
 	   	return true;
 	}
+
+    @Override
+    public TSMethod Method(String name, TSType returnType){
+        TSMethod method = new TSMethodImpl(this, name, returnType);
+        methods.add(method);
+        return method;
+    }
 }

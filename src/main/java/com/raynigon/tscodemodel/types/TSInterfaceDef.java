@@ -5,18 +5,13 @@ import java.util.List;
 
 public class TSInterfaceDef extends TSDefClassType implements TSInterface{
 
-    private TSModuleDef module;
     private String name;
     private List<TSInterface> extensions;
     
     public TSInterfaceDef(TSModuleDef inModule, String inName){
-        module = inModule;
+        super(inModule);
         name = inName;
         extensions = new ArrayList<>();
-    }
-    
-    public TSModuleDef getModule(){
-        return module;
     }
     
     public String getName(){
@@ -25,24 +20,13 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
     
     @Override
     public String getModulePath(){
-        return "./"+module.getPackage().getName()+"/"+module.getName();
+        return "./"+getModule().getPackage().getName()+"/"+getModule().getName();
     }
-
-    /*@Override
-    public void buildSelf(PrintStream ps){
-        if(isExported())
-            ps.print("export ");
-        ps.print("interface "+name+" ");
-        if(extensions.size()>0){
-            ps.print("extends ");
-            List<String> names = extensions.stream().map((intf)->intf.getName()).collect(Collectors.toList());
-            ps.print(String.join(",", names));
-        }
-        ps.println("{");
-        buildAttributes(ps);
-        //TODO Methods
-        ps.println("}");
-    }*/
+    
+    @Override
+    public TSMethod Method(String name, TSType returnType){
+        return new TSMethodDef(this, name, returnType);
+    }   
     
     public void Extend(TSInterface extension){
         extensions.add(extension);
@@ -61,5 +45,5 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
 	   	if(!getModulePath().equals(((TSType) obj).getModulePath()))
 	   		return false;
 	   	return true;
-	}	
+	}
 }
