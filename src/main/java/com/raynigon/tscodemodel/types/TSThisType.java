@@ -1,5 +1,7 @@
 package com.raynigon.tscodemodel.types;
 
+import com.raynigon.tscodemodel.expressions.TSCallExpression;
+
 final class TSThisType implements TSVar{
     
     private TSType type;
@@ -9,13 +11,12 @@ final class TSThisType implements TSVar{
     }
 
     @Override
-    public TSStatement call(String methodName, TSVar... args){
-        return new CallStatement(this, methodName, args);
+    public TSExpression Call(String methodName, TSVar... args){
+        return new TSCallExpression(this, methodName, args);
     }
 
-    @Override
-    public TSStatement call(TSMethod method, TSVar... args){
-        return new CallStatement(this, method, args);
+    public TSExpression call(TSMethod method, TSVar... args){
+        return new TSCallExpression(this, method, args);
     }
 
     @Override
@@ -27,4 +28,14 @@ final class TSThisType implements TSVar{
     public String getName(){
         return "this";
     }
+
+	@Override
+	public TSType ReturnType() {
+		return type;
+	}
+
+	@Override
+	public TSExpression Assign(TSExpression value) {
+		throw new IllegalArgumentException("Its not allowed to assign something to the this pointer");
+	}
 }

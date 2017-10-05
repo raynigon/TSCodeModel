@@ -20,6 +20,5 @@ public class TSArray implements TSType{
 
     public TSType getArrayType(){
         return type;
-    }
-    
+    }    
 }

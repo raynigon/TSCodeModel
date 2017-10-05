@@ -8,14 +8,14 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 
 public class TSMethodCtor implements TSMethod{
 
-    private TSDefClassType parent;
+    private TSClassDef parent;
     private List<TSParam> params;
-    private TSBlock codeSequence;
+    private TSMethodBlock codeSequence;
 
     public TSMethodCtor(TSClassDef parent){
         this.parent = parent;
         params = new ArrayList<>();
-        codeSequence = new TSBlock(parent);
+        codeSequence = new TSMethodBlock(this);
     }
     
     @Override
@@ -55,12 +55,12 @@ public class TSMethodCtor implements TSMethod{
     }
 
     @Override
-    public TSDefClassType getParent(){
+    public TSClassDef getParent(){
         return parent;
     }
 
     @Override
-    public TSBlock body(){
+    public TSMethodBlock body(){
         return codeSequence;
     }
 

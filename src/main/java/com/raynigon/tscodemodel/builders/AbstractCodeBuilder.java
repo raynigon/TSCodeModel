@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.raynigon.tscodemodel.types.TSAttribute;
+import com.raynigon.tscodemodel.types.TSMethodBlock;
 import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSDefClassType;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
+import com.raynigon.tscodemodel.types.TSMethod;
 import com.raynigon.tscodemodel.types.TSModuleDef;
 import com.raynigon.tscodemodel.types.TSPackage;
 import com.raynigon.tscodemodel.types.TSType;
@@ -55,6 +57,8 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 		List<TSType> usages = new ArrayList<>();
 		for(TSAttribute attr : decl.getAttributes())
 			usages.add(attr.getType());
+		for(TSMethod method : decl.getMethods())
+			usages.addAll(determineUsages(method));
 		if(decl instanceof TSClassDef){
 			TSClassDef clazz = (TSClassDef) decl;
 			if(clazz.getExtension()!=null)
@@ -71,13 +75,28 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 		return usages;
 	}
 
+	private Collection<TSType> determineUsages(TSMethod method) {
+		List<TSType> types = new ArrayList<>();
+		types.add(method.getReturnType());
+		types.addAll(method.getParams().stream().map((item)->item.getType()).collect(Collectors.toList()));
+		if(method.body()!=null)
+			types.addAll(determineUsages(method.body()));
+		return types;
+	}
+
+	private Collection<TSType> determineUsages(TSMethodBlock body) {
+		List<TSType> types = new ArrayList<>();
+		//TODO
+		return types;
+	}
+
 	private void buildClassTypes(List<TSDefClassType> declarations, PrintStream ps) {
 		Collections.sort(declarations, FilterHelper::compareClassTypes);
 		for(TSDefClassType type : declarations){
 			if(type instanceof TSClassDef){
-				getClassCodeBuilder().buildClass(ps, (TSClassDef) type);
+				getClassCodeBuilder().buildClass(ps, (TSClassDef) type, 0);
 			}else if(type instanceof TSInterfaceDef){
-				getInterfaceCodeBuilder().buildInterface(ps, (TSInterfaceDef) type);
+				getInterfaceCodeBuilder().buildInterface(ps, (TSInterfaceDef) type, 0);
 			}else{
 				throw new RuntimeException("Unknown Class Type");
 			}

@@ -18,5 +18,5 @@ public interface TSMethod{
     
     TSDefClassType getParent();
 
-    TSBlock body();
+    TSMethodBlock body();
 }

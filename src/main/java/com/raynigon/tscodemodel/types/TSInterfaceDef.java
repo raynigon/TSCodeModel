@@ -25,7 +25,9 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
     
     @Override
     public TSMethod Method(String name, TSType returnType){
-        return new TSMethodDef(this, name, returnType);
+        TSMethod result = new TSMethodDef(this, name, returnType);
+        methods.add(result);
+        return result;
     }   
     
     public void Extend(TSInterface extension){

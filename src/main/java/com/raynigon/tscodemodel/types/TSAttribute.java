@@ -71,15 +71,20 @@ public class TSAttribute implements TSType, TSVar{
 	   	return true;
 	}
 
-    @Override
-    public TSStatement call(TSMethod method, TSVar... args){
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public TSType ReturnType() {
+		return this;
+	}
 
-    @Override
-    public TSStatement call(String methodName, TSVar... args){
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public TSExpression Call(String methodName, TSVar... params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TSExpression Assign(TSExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

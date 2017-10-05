@@ -1,5 +1,6 @@
 package com.raynigon.tscodemodel.types;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class TSMethodDef implements TSMethod{
         this.parent = parent;
         this.name = name;
         this.returnType = returnType;
+        this.params = new ArrayList<>();
     }
 
     @Override
@@ -45,8 +47,9 @@ public class TSMethodDef implements TSMethod{
 
     @Override
     public TSParam Parameter(String name, TSType type){
-        // TODO Auto-generated method stub
-        return null;
+        TSParam param = new TSParam(name, type, this);
+        params.add(param);
+        return param;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class TSMethodDef implements TSMethod{
     }
 
     @Override
-    public TSBlock body(){
+    public TSMethodBlock body(){
         return null;
     }
 

@@ -57,4 +57,12 @@ public class TSCodeModel{
     public ILogger getLogger(){
         return logger;
     }
+
+	public static String getIndents(int indents) {
+		String result = "";
+		for(int i=0;i<indents;i++){
+			result += getIndent();
+		}
+		return result;
+	}
 }

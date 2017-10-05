@@ -14,11 +14,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.raynigon.tscodemodel.builders.StringCodeBuilder;
+import com.raynigon.tscodemodel.expressions.TSExpr;
 import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
+import com.raynigon.tscodemodel.types.TSMethod;
 import com.raynigon.tscodemodel.types.TSModuleDef;
 import com.raynigon.tscodemodel.types.TSPackage;
+import com.raynigon.tscodemodel.types.TSParam;
 import com.raynigon.tscodemodel.types.TSSimpleType;
 import com.raynigon.tscodemodel.types.TSVisbility;
 
@@ -73,6 +76,36 @@ public class TSCodeModelTest{
         userGroup.Attribute("administrator", iuser);
         userGroup.Attribute("users", TSSimpleType.createArray(iuser));
         checkResult("UserGroup");
+    }
+    
+    @Test
+    public void testInterfaceMethodDeclaration() throws IOException{
+        TSPackage pack = tscm.Package("Root");
+        TSInterfaceDef mathlib = pack.Interface("IMathLib");
+        TSMethod addMethod = mathlib.Method("add", TSSimpleType.NUMBER);
+        addMethod.Parameter("x", TSSimpleType.NUMBER);
+        addMethod.Parameter("y", TSSimpleType.NUMBER);
+        TSMethod subMethod = mathlib.Method("substract", TSSimpleType.NUMBER);
+        subMethod.Parameter("x", TSSimpleType.NUMBER);
+        subMethod.Parameter("y", TSSimpleType.NUMBER);
+        TSMethod multiplyMethod = mathlib.Method("multiply", TSSimpleType.NUMBER);
+        multiplyMethod.Parameter("x", TSSimpleType.NUMBER);
+        multiplyMethod.Parameter("y", TSSimpleType.NUMBER);
+        TSMethod divideMethod = mathlib.Method("divide", TSSimpleType.NUMBER);
+        divideMethod.Parameter("x", TSSimpleType.NUMBER);
+        divideMethod.Parameter("y", TSSimpleType.NUMBER);
+        checkResult("IMathLib");
+    }
+    
+    @Test
+    public void testSimpleMethodImpl() throws IOException{
+        TSPackage pack = tscm.Package("Root");
+        TSClassDef mathlib = pack.Class("MathLib");
+        TSMethod addMethod = mathlib.Method("add", TSSimpleType.NUMBER);
+        TSParam paramX = addMethod.Parameter("x", TSSimpleType.NUMBER);
+        TSParam paramY = addMethod.Parameter("y", TSSimpleType.NUMBER);
+        addMethod.body().Return(TSExpr.Add(paramX, paramY));
+        checkResult("MathLib");
     }
     
     private List<String> readResource(String string) throws IOException{

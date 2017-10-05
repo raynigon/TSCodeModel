@@ -47,4 +47,8 @@ public abstract class TSDefClassType implements TSType{
     public TSModuleDef getModule(){
         return module;
     }
+    
+	public Collection<TSMethod> getMethods() {
+		return new ArrayList<>(methods);
+	}
 }

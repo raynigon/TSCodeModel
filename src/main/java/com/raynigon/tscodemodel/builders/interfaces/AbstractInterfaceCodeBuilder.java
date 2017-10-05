@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.types.TSAttribute;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
+import com.raynigon.tscodemodel.types.TSMethod;
+import com.raynigon.tscodemodel.types.TSParam;
 
 public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 
@@ -18,22 +20,23 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
     }
 	
 	@Override
-	public void buildInterface(PrintStream ps, TSInterfaceDef item) {
+	public void buildInterface(PrintStream ps, TSInterfaceDef item, int indents) {
 	    codeModel.getLogger().debug("Building Interface %s", item.getName());
-		String indent = TSCodeModel.getIndent();
-		ps.println(createHeader(item)+" {");
+		String indent = TSCodeModel.getIndents(indents);
+		String attrIndent = TSCodeModel.getIndents(indents+1);
+		ps.println(indent+createInterfaceHeader(item)+" {");
 		for(TSAttribute attr : item.getAttributes()){
 		    codeModel.getLogger().debug("Add Attribute", attr.getName());
-			ps.println(indent+createAttribute(attr));
+			ps.println(attrIndent+createAttribute(attr));
 		}
-		/*for(TSMethod method : item.getMethods()){
-			ps.println(createMethod(method));
-		}*/
-		ps.println("}");
+		for(TSMethod method : item.getMethods()){
+			ps.println(attrIndent+createMethod(method));
+		}
+		ps.println(indent+"}");
 	}
 
 	@Override
-	public String createHeader(TSInterfaceDef item) {
+	public String createInterfaceHeader(TSInterfaceDef item) {
 		String result = "";
 		if(item.isExported())
 			result += "export ";
@@ -51,6 +54,15 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 		if(item.isReadonly())
 			prefix += "readonly ";
 		return String.format(ATTRIBUTE_FORMAT, prefix, item.getName(), item.getType().getName());
+	}
+	
+	@Override
+	public String createMethod(TSMethod item) {
+		StringBuilder params = new StringBuilder();
+		for(TSParam param : item.getParams()){
+				params.append(", ").append(param.getName()).append(": ").append(param.getType().getName());
+		}
+		return String.format("%s(%s): %s;", item.getName(), params.substring(2), item.getReturnType().getName());
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.raynigon.tscodemodel.types;
 
+import com.raynigon.tscodemodel.expressions.TSCallExpression;
+
 public class TSParam implements TSVar{
 
     private String name;
@@ -25,12 +27,18 @@ public class TSParam implements TSVar{
     }
 
     @Override
-    public TSStatement call(TSMethod method, TSVar... args){
-        return new CallStatement(this, method, args);
+    public TSExpression Call(String methodName, TSVar... args){
+        return new TSCallExpression(this, methodName, args);
     }
 
-    @Override
-    public TSStatement call(String methodName, TSVar... args){
-        return new CallStatement(this, methodName, args);
-    }
+	@Override
+	public TSType ReturnType() {
+		return type;
+	}
+
+	@Override
+	public TSExpression Assign(TSExpression value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

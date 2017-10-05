@@ -8,19 +8,20 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 
 public class TSMethodImpl implements TSMethod{
 
-    private TSDefClassType parent;
+    private TSClassDef parent;
     private String name;
     private TSType returnType;
     private List<TSParam> params;
     private TSVisbility visbility;
-    private TSBlock codeSequence;
+    private TSMethodBlock codeSequence;
     
     public TSMethodImpl(TSClassDef parent, String name, TSType returnType){
         this.parent = parent;
         this.name = name;
         this.params = new ArrayList<>();
         this.returnType = returnType;
-        codeSequence = new TSBlock(parent);
+        this.visbility = TSVisbility.PUBLIC;
+        this.codeSequence = new TSMethodBlock(this);
     }
     
     @Override
@@ -58,12 +59,12 @@ public class TSMethodImpl implements TSMethod{
     }
 
     @Override
-    public TSDefClassType getParent(){
+    public TSClassDef getParent(){
         return parent;
     }
 
     @Override
-    public TSBlock body(){
+    public TSMethodBlock body(){
         return codeSequence;
     }
 
