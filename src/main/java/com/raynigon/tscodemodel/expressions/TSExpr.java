@@ -35,6 +35,6 @@ public class TSExpr {
 	}
 	
 	public static TSExpression Lit(String value) {
-		return new TSDirectExpression("\""+value+"\"", TSSimpleType.STRING);
+		return new TSDirectExpression("'"+value+"'", TSSimpleType.STRING);
 	}
 }
