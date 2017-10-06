@@ -125,9 +125,10 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 		for(TSParam param : item.getParams()){
 			params.append(", ").append(param.getName()).append(": ").append(param.getType().getName());
 		}
+		String paramsStr = item.getParams().isEmpty() ? "" : params.substring(2);
 		if(item instanceof TSMethodCtor){
-			return String.format("%s %s(%s) {", visibilityStr, item.getName(), params.substring(2));
+			return String.format("%s %s(%s) {", visibilityStr, item.getName(), paramsStr);
 		}
-		return String.format("%s %s(%s): %s {", visibilityStr, item.getName(), params.substring(2), item.getReturnType().getName());
+		return String.format("%s %s(%s): %s {", visibilityStr, item.getName(), paramsStr, item.getReturnType().getName());
 	}
 }

@@ -67,7 +67,8 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 		for(TSParam param : item.getParams()){
 				params.append(", ").append(param.getName()).append(": ").append(param.getType().getName());
 		}
-		return String.format("%s(%s): %s;", item.getName(), params.substring(2), item.getReturnType().getName());
+		String paramsStr = item.getParams().isEmpty() ? "" : params.substring(2);
+		return String.format("%s(%s): %s;", item.getName(), paramsStr, item.getReturnType().getName());
 	}
 
 }
