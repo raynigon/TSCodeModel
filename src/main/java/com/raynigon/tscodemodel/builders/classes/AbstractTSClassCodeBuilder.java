@@ -11,6 +11,7 @@ import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
 import com.raynigon.tscodemodel.types.TSMethod;
+import com.raynigon.tscodemodel.types.TSMethodCtor;
 import com.raynigon.tscodemodel.types.TSParam;
 
 public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
@@ -32,13 +33,20 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 	    checkInterfaces(item);	    
 		String indent = TSCodeModel.getIndents(indents);
 		ps.println(indent+createClassHeader(item)+" {");
+		ps.println();
 		String attrIndent = TSCodeModel.getIndents(indents+1);
-		for(TSAttribute attr : item.getAttributes()){
-		    codeModel.getLogger().debug("Add Attribute", attr.getName());
-			ps.println(attrIndent+createAttribute(attr));
-		}
+		item.getAttributes().stream()
+			.sorted((attr0, attr1)->attr0.getName().compareTo(attr1.getName()))
+			.forEach((attr)->{
+				codeModel.getLogger().debug("Add Attribute", attr.getName());
+				ps.println(attrIndent+createAttribute(attr));
+			});
+		if(!item.getAttributes().isEmpty() && !item.getMethods().isEmpty())
+			ps.println();
+		//TODO Sort Methods
 		for(TSMethod method : item.getMethods()){
 			buildMethod(ps, method, indents+1);
+			ps.println();
 		}
 		ps.println(indent+"}");
 	}
@@ -116,6 +124,9 @@ public abstract class AbstractTSClassCodeBuilder implements TSClassCodeBuilder {
 		StringBuilder params = new StringBuilder();
 		for(TSParam param : item.getParams()){
 			params.append(", ").append(param.getName()).append(": ").append(param.getType().getName());
+		}
+		if(item instanceof TSMethodCtor){
+			return String.format("%s %s(%s) {", visibilityStr, item.getName(), params.substring(2));
 		}
 		return String.format("%s %s(%s): %s {", visibilityStr, item.getName(), params.substring(2), item.getReturnType().getName());
 	}

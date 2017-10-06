@@ -3,9 +3,11 @@ package com.raynigon.tscodemodel.builders.blocks;
 import java.io.PrintStream;
 
 import com.raynigon.tscodemodel.TSCodeModel;
+import com.raynigon.tscodemodel.expressions.TSAssignExpression;
 import com.raynigon.tscodemodel.expressions.TSDirectExpression;
 import com.raynigon.tscodemodel.expressions.TSMathExpression;
 import com.raynigon.tscodemodel.expressions.TSReturnExpression;
+import com.raynigon.tscodemodel.types.TSAttribute;
 import com.raynigon.tscodemodel.types.TSExpression;
 import com.raynigon.tscodemodel.types.TSMethodBlock;
 import com.raynigon.tscodemodel.types.TSVar;
@@ -23,6 +25,8 @@ public abstract class AbstractCodeBlockBuilder implements TSCodeBlockBuilder{
 		String ident = TSCodeModel.getIndents(indents);
 		for(TSExpression expr : block.getExpressions()){
 			String result = evaluateExpression(expr);
+			if(result==null)
+				continue;
 			ps.println(ident+result+";");
 			if(result.startsWith("return"))
 				break;
@@ -41,10 +45,19 @@ public abstract class AbstractCodeBlockBuilder implements TSCodeBlockBuilder{
 		}else if(expr instanceof TSDirectExpression){
 			return ((TSDirectExpression) expr).getValue();
 		}else if(expr instanceof TSVar){
-			return ((TSVar) expr).getName();
+			return getVariableName((TSVar) expr);
+		}else if(expr instanceof TSAssignExpression){
+			return evaluateExpression(((TSAssignExpression) expr).getVariable()) + " = " + evaluateExpression(((TSAssignExpression) expr).getAssignedValue());
 		}
 		codemodel.getLogger().error("Unknown Expression: "+expr.getClass().getSimpleName());
 		return null;
+	}
+
+	private String getVariableName(TSVar variable) {
+		if(variable instanceof TSAttribute){
+			return "this."+variable.getName();
+		}
+		return variable.getName();
 	}
 
 	private String createReturnExpression(TSReturnExpression expr) {

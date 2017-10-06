@@ -51,6 +51,8 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
             });
         }).filter(FilterHelper::isNotSimpleType).distinct().sorted(FilterHelper::compareTypes).collect(Collectors.toList());
         getModuleCodeBuilder().createImports(usages, module, ps);
+		if(!module.getDeclarations().isEmpty() && !usages.isEmpty())
+			ps.println();
 	}
 
 	private Collection<TSType> determineUsages(TSDefClassType decl) {
@@ -100,6 +102,8 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 			}else{
 				throw new RuntimeException("Unknown Class Type");
 			}
+			if(declarations.get(declarations.size()-1)!=type)
+				ps.println();				
 		}
 	}
 }

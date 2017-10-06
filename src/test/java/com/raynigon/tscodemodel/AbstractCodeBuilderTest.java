@@ -1,4 +1,4 @@
-package com.raynigon.tscodemodel.builders;
+package com.raynigon.tscodemodel;
 
 import org.junit.Before;
 

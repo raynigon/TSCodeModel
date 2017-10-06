@@ -25,10 +25,15 @@ public class AbstractInterfaceCodeBuilder implements TSInterfaceCodeBuilder {
 		String indent = TSCodeModel.getIndents(indents);
 		String attrIndent = TSCodeModel.getIndents(indents+1);
 		ps.println(indent+createInterfaceHeader(item)+" {");
-		for(TSAttribute attr : item.getAttributes()){
+		ps.println();
+		item.getAttributes().stream()
+		.sorted((attr0, attr1)->attr0.getName().compareTo(attr1.getName()))
+		.forEach((attr)->{
 		    codeModel.getLogger().debug("Add Attribute", attr.getName());
 			ps.println(attrIndent+createAttribute(attr));
-		}
+		});
+		if(!item.getAttributes().isEmpty() && !item.getMethods().isEmpty())
+			ps.println();
 		for(TSMethod method : item.getMethods()){
 			ps.println(attrIndent+createMethod(method));
 		}
