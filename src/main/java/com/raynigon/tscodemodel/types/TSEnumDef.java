@@ -1,8 +1,8 @@
 package com.raynigon.tscodemodel.types;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class TSEnumDef extends TSDefClassType implements TSEnum{
 
@@ -12,7 +12,7 @@ public class TSEnumDef extends TSDefClassType implements TSEnum{
     public TSEnumDef(TSModuleDef inModule, String name){
         super(inModule);
         this.name = name;
-        this.values = new HashMap<>();
+        this.values = new TreeMap<>();
     }
 
     @Override
