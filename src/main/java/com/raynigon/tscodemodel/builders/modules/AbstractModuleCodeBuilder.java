@@ -28,6 +28,8 @@ public abstract class AbstractModuleCodeBuilder implements TSModuleCodeBuilder{
 	private TSType mapTypes(TSType in, TSModuleDef item){
 	    if(in instanceof TSArray)
 	        in = ((TSArray) in).getArrayType();
+	    if(in instanceof TSSimpleType)
+	        throw new IllegalArgumentException("Incoming Type is a TSSimpleType");
 	    String modulePath = PathConversionHelper.normalizeModulePath(in.getModulePath());
         modulePath = PathConversionHelper.convertToRelativePath(modulePath, item);
         return new TSTypeImpl(modulePath, in.getName());
