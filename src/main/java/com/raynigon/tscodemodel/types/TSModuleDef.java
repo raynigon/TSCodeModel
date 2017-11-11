@@ -45,6 +45,14 @@ public class TSModuleDef implements TSModule{
         return intf;
     }
 
+    public TSEnumDef Enum(String name){
+        if(name==null)
+            throw new NullPointerException();
+        TSEnumDef result = new TSEnumDef(this, name);
+        defTypes.add(result);
+        return result;
+    }
+    
     public List<TSDefClassType> getDeclarations(){
         return new ArrayList<>(defTypes);
     }
@@ -54,4 +62,5 @@ public class TSModuleDef implements TSModule{
         String s = getPackage().getName()+"#"+getName();
         return s.hashCode();
     }
+
 }

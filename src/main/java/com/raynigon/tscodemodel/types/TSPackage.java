@@ -44,6 +44,13 @@ public class TSPackage{
         return intf;
     }
     
+    public TSEnumDef Enum(String name){
+        TSModuleDef module = Module(name);
+        TSEnumDef tsenum = module.Enum(name);
+        tsenum.setExport(true);
+        return tsenum;
+    }
+    
     public String getName(){
         return name;
     }
@@ -51,4 +58,6 @@ public class TSPackage{
     public List<TSModuleDef> getModules(){
         return Collections.unmodifiableList(modules);
     }
+
+
 }

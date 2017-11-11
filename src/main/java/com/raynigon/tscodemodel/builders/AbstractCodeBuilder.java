@@ -12,6 +12,7 @@ import com.raynigon.tscodemodel.types.TSArray;
 import com.raynigon.tscodemodel.types.TSAttribute;
 import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSDefClassType;
+import com.raynigon.tscodemodel.types.TSEnumDef;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
 import com.raynigon.tscodemodel.types.TSMethod;
 import com.raynigon.tscodemodel.types.TSMethodBlock;
@@ -87,6 +88,9 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 			TSInterfaceDef clazz = (TSInterfaceDef) decl;
 			if(clazz.getExtensions().size()>0)
 				usages.addAll(clazz.getExtensions());
+		}else if(decl instanceof TSEnumDef){
+		    //TSEnumDef tsenum = (TSEnumDef) decl;
+		    // TODO there should not be any usages by enums!
 		}else{
 			throw new RuntimeException("Unknown Type");
 		}
@@ -115,6 +119,8 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 				getClassCodeBuilder().buildClass(ps, (TSClassDef) type, 0);
 			}else if(type instanceof TSInterfaceDef){
 				getInterfaceCodeBuilder().buildInterface(ps, (TSInterfaceDef) type, 0);
+			}else if(type instanceof TSEnumDef){
+			    getEnumCodeBuilder().buildEnum(ps, (TSEnumDef) type, 0);
 			}else{
 				throw new RuntimeException("Unknown Class Type");
 			}

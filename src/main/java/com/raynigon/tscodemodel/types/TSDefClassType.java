@@ -51,4 +51,9 @@ public abstract class TSDefClassType implements TSType{
 	public Collection<TSMethod> getMethods() {
 		return new ArrayList<>(methods);
 	}
+	
+	@Override
+    public final String getModulePath(){
+        return "./"+getModule().getPackage().getName()+"/"+getModule().getName();
+    }
 }

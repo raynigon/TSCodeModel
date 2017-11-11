@@ -24,7 +24,7 @@ public abstract class AbstractCodeBlockBuilder implements TSCodeBlockBuilder{
 	public void buildCodeBlock(PrintStream ps, TSMethodBlock block, int indents){
 		String ident = TSCodeModel.getIndents(indents);
 		for(TSExpression expr : block.getExpressions()){
-			String result = evaluateExpression(expr);
+			String result = buildExpression(expr);
 			if(result==null)
 				continue;
 			ps.println(ident+result+";");
@@ -33,13 +33,14 @@ public abstract class AbstractCodeBlockBuilder implements TSCodeBlockBuilder{
 		}
 	}
 
-	private String evaluateExpression(TSExpression expr) {
+    @Override
+	public String buildExpression(TSExpression expr) {
 		if(expr instanceof TSReturnExpression){
 			return createReturnExpression((TSReturnExpression) expr) + 
-					evaluateExpression(((TSReturnExpression) expr).getReturnValue());
+					buildExpression(((TSReturnExpression) expr).getReturnValue());
 		}else if(expr instanceof TSMathExpression){
-			String first = evaluateExpression(((TSMathExpression) expr).getFirst());
-			String second = evaluateExpression(((TSMathExpression) expr).getSecond());
+			String first = buildExpression(((TSMathExpression) expr).getFirst());
+			String second = buildExpression(((TSMathExpression) expr).getSecond());
 			String operation = ((TSMathExpression) expr).getOperation();
 			return String.format("(%s %s %s)", first, operation, second);
 		}else if(expr instanceof TSDirectExpression){
@@ -47,7 +48,7 @@ public abstract class AbstractCodeBlockBuilder implements TSCodeBlockBuilder{
 		}else if(expr instanceof TSVar){
 			return getVariableName((TSVar) expr);
 		}else if(expr instanceof TSAssignExpression){
-			return evaluateExpression(((TSAssignExpression) expr).getVariable()) + " = " + evaluateExpression(((TSAssignExpression) expr).getAssignedValue());
+			return buildExpression(((TSAssignExpression) expr).getVariable()) + " = " + buildExpression(((TSAssignExpression) expr).getAssignedValue());
 		}
 		codemodel.getLogger().error("Unknown Expression: "+expr.getClass().getSimpleName());
 		return null;

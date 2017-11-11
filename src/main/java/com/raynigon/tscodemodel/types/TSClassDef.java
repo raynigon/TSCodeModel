@@ -40,11 +40,6 @@ public class TSClassDef extends TSDefClassType implements TSClass{
         return name;
     }
 
-    @Override
-    public String getModulePath(){
-        return "./"+getModule().getPackage().getName()+"/"+getModule().getName();
-    }
-
 	public TSClass getExtension() {
 		return extended;
 	}

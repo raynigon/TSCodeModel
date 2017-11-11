@@ -10,8 +10,10 @@ import com.raynigon.tscodemodel.builders.TSCodeBuilder;
 import com.raynigon.tscodemodel.types.TSClass;
 import com.raynigon.tscodemodel.types.TSInterface;
 import com.raynigon.tscodemodel.types.TSPackage;
+import com.raynigon.tscodemodel.types.TSType;
 import com.raynigon.tscodemodel.types.hidden.DefaultLogger;
 import com.raynigon.tscodemodel.types.hidden.TSRefClass;
+import com.raynigon.tscodemodel.types.hidden.TSRefEnum;
 import com.raynigon.tscodemodel.types.hidden.TSRefInterface;
 
 public class TSCodeModel{
@@ -52,6 +54,10 @@ public class TSCodeModel{
 
     public TSInterface ReferenceInterface(TSPackage modelpack, String moduleName, String interfaceName){
         return new TSRefInterface(modelpack.getName()+"/"+moduleName, interfaceName);
+    }
+    
+    public TSType ReferenceEnum(TSPackage modelpack, String moduleName, String enumName){
+        return new TSRefEnum(modelpack.getName()+"/"+moduleName, enumName);
     }
     
     public ILogger getLogger(){

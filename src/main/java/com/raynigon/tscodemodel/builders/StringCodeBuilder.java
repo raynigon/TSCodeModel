@@ -10,7 +10,9 @@ import java.util.Map;
 import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.builders.FileCodeBuilder.ClassCodeBuilder;
 import com.raynigon.tscodemodel.builders.FileCodeBuilder.InterfaceCodeBuilder;
+import com.raynigon.tscodemodel.builders.FileCodeBuilder.EnumCodeBuilder;
 import com.raynigon.tscodemodel.builders.classes.TSClassCodeBuilder;
+import com.raynigon.tscodemodel.builders.enums.TSEnumCodeBuilder;
 import com.raynigon.tscodemodel.builders.interfaces.TSInterfaceCodeBuilder;
 import com.raynigon.tscodemodel.builders.modules.AbstractModuleCodeBuilder;
 import com.raynigon.tscodemodel.builders.modules.TSModuleCodeBuilder;
@@ -23,12 +25,14 @@ public class StringCodeBuilder extends AbstractCodeBuilder{
 	private ModuleCodeBuilder moduleCodeBuilder;
 	private ClassCodeBuilder classCodeBuilder;
 	private InterfaceCodeBuilder intfCodeBuilder;
+    private EnumCodeBuilder enumCodeBuilder;
 	
     public StringCodeBuilder(TSCodeModel inCodeModel){
         streams = new HashMap<>();
 		moduleCodeBuilder = new ModuleCodeBuilder(inCodeModel);
 		classCodeBuilder = new ClassCodeBuilder(inCodeModel);
 		intfCodeBuilder = new InterfaceCodeBuilder(inCodeModel);
+		enumCodeBuilder = new EnumCodeBuilder(inCodeModel);
     }
 
     @Override
@@ -44,6 +48,11 @@ public class StringCodeBuilder extends AbstractCodeBuilder{
     @Override
     public TSInterfaceCodeBuilder getInterfaceCodeBuilder() {
     	return intfCodeBuilder;
+    }
+    
+    @Override
+    public TSEnumCodeBuilder getEnumCodeBuilder(){
+        return enumCodeBuilder;
     }
     
     public String getModuleText(String pack, String module){
