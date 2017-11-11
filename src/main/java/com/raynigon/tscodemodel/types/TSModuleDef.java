@@ -11,6 +11,8 @@ public class TSModuleDef implements TSModule{
     
     public TSModuleDef(TSPackage inPackage, String inName){
         pack = inPackage;
+        if(inName==null)
+            throw new NullPointerException();
         name = inName;
         defTypes = new ArrayList<>();
     }
@@ -24,6 +26,8 @@ public class TSModuleDef implements TSModule{
     }
 
     public TSClassDef Class(String name){
+        if(name==null)
+            throw new NullPointerException();
         if(defTypes.stream().anyMatch((item)->item.getName().equals(name)))
             throw new IllegalArgumentException("A Type with the given Name already exists in this Module");
         TSClassDef clazz = new TSClassDef(this, name);
@@ -32,6 +36,8 @@ public class TSModuleDef implements TSModule{
     }
     
     public TSInterfaceDef Interface(String name){
+        if(name==null)
+            throw new NullPointerException();
         if(defTypes.stream().anyMatch((item)->item.getName().equals(name)))
             throw new IllegalArgumentException("A Type with the given Name already exists in this Module");
         TSInterfaceDef intf = new TSInterfaceDef(this, name);

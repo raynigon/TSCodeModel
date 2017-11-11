@@ -7,6 +7,7 @@ import com.raynigon.tscodemodel.TSCodeModel;
 import com.raynigon.tscodemodel.builders.PathConversionHelper;
 import com.raynigon.tscodemodel.types.TSArray;
 import com.raynigon.tscodemodel.types.TSModuleDef;
+import com.raynigon.tscodemodel.types.TSSimpleType;
 import com.raynigon.tscodemodel.types.TSType;
 
 public abstract class AbstractModuleCodeBuilder implements TSModuleCodeBuilder{
@@ -20,7 +21,7 @@ public abstract class AbstractModuleCodeBuilder implements TSModuleCodeBuilder{
 	@Override
 	public void createImports(List<TSType> usages, TSModuleDef item, PrintStream ps) {
 		//TODO add all used types of the same module into one import
-	    usages.stream().map((in)->mapTypes(in, item)).distinct().
+	    usages.stream().filter((in)->!(in instanceof TSSimpleType)).map((in)->mapTypes(in, item)).distinct().
 	    forEach((usage)->addImport(usage, item, ps));
 	}
 

@@ -8,6 +8,8 @@ public class TSRefClass implements TSClass{
     private String name;
     
     public TSRefClass(String inModulePath, String inName){
+        if(inModulePath==null || inName==null)
+            throw new NullPointerException();
         modulePath = inModulePath;
         name = inName;
     }

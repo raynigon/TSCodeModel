@@ -10,6 +10,8 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
     
     public TSInterfaceDef(TSModuleDef inModule, String inName){
         super(inModule);
+        if(inName==null)
+            throw new NullPointerException();
         name = inName;
         extensions = new ArrayList<>();
     }
@@ -31,6 +33,8 @@ public class TSInterfaceDef extends TSDefClassType implements TSInterface{
     }   
     
     public void Extend(TSInterface extension){
+        if(extension==null)
+            throw new NullPointerException();
         extensions.add(extension);
     }
 

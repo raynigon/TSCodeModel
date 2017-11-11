@@ -13,6 +13,8 @@ public class TSPackage{
     private List<TSModuleDef> modules;
     
     public TSPackage(TSCodeModel inCodeModel, String inName){
+        if(inName==null)
+            throw new NullPointerException();
         codeModel = inCodeModel;
         name = inName;
         modules = new ArrayList<>();

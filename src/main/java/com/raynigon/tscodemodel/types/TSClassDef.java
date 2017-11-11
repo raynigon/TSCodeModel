@@ -12,15 +12,21 @@ public class TSClassDef extends TSDefClassType implements TSClass{
     
     public TSClassDef(TSModuleDef inModule, String inName){
         super(inModule);
+        if(inName==null)
+            throw new NullPointerException();
         name = inName;
         implemented = new ArrayList<>();
     }
     
     public void Extend(TSClass extension){
+        if(extension==null)
+            throw new NullPointerException();
         extended = extension;
     }
         
     public void Implement(TSInterface intf){
+        if(intf==null)
+            throw new NullPointerException();
         implemented.add(intf);
     }
     
@@ -68,6 +74,8 @@ public class TSClassDef extends TSDefClassType implements TSClass{
 
     @Override
     public TSMethod Method(String name, TSType returnType){
+        if(name==null)
+            throw new NullPointerException();
         TSMethod method = new TSMethodImpl(this, name, returnType);
         methods.add(method);
         return method;
