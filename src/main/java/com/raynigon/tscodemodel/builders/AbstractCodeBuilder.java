@@ -8,12 +8,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.raynigon.tscodemodel.types.TSArray;
 import com.raynigon.tscodemodel.types.TSAttribute;
-import com.raynigon.tscodemodel.types.TSMethodBlock;
 import com.raynigon.tscodemodel.types.TSClassDef;
 import com.raynigon.tscodemodel.types.TSDefClassType;
 import com.raynigon.tscodemodel.types.TSInterfaceDef;
 import com.raynigon.tscodemodel.types.TSMethod;
+import com.raynigon.tscodemodel.types.TSMethodBlock;
 import com.raynigon.tscodemodel.types.TSModuleDef;
 import com.raynigon.tscodemodel.types.TSPackage;
 import com.raynigon.tscodemodel.types.TSType;
@@ -45,16 +46,31 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
         for(TSDefClassType decl : declarations){
             usages.addAll(determineUsages(decl));
         }
-        usages = usages.stream().filter((inType)->{
-            return !declarations.stream().anyMatch((declType)->{
-               return inType.getName().equals(declType.getName());
-            });
-        }).filter(FilterHelper::isNotSimpleType).distinct().sorted(FilterHelper::compareTypes).collect(Collectors.toList());
+        usages = usages.stream()
+                .map(this::mapArrayTypes)
+                .filter((inType)->isDuplicated(inType, declarations))
+                .filter(FilterHelper::isNotSimpleType)
+                .distinct()
+                .sorted(FilterHelper::compareTypes)
+                .collect(Collectors.toList());
         getModuleCodeBuilder().createImports(usages, module, ps);
 		if(!module.getDeclarations().isEmpty() && !usages.isEmpty())
 			ps.println();
 	}
+	
+	private TSType mapArrayTypes(TSType in){
+	    if(in instanceof TSArray){
+	        return mapArrayTypes(((TSArray) in).getArrayType());
+	    }
+	    return in;
+	}
 
+	private boolean isDuplicated(TSType inType, List<TSDefClassType> declarations){
+        return !declarations.stream().anyMatch((declType)->{
+            return inType.getName().equals(declType.getName());
+         });
+     }
+	
 	private Collection<TSType> determineUsages(TSDefClassType decl) {
 		List<TSType> usages = new ArrayList<>();
 		for(TSAttribute attr : decl.getAttributes())

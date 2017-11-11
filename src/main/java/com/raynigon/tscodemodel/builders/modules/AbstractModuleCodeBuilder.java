@@ -21,7 +21,7 @@ public abstract class AbstractModuleCodeBuilder implements TSModuleCodeBuilder{
 	@Override
 	public void createImports(List<TSType> usages, TSModuleDef item, PrintStream ps) {
 		//TODO add all used types of the same module into one import
-	    usages.stream().filter((in)->!(in instanceof TSSimpleType)).map((in)->mapTypes(in, item)).distinct().
+	    usages.stream().map((in)->mapTypes(in, item)).distinct().
 	    forEach((usage)->addImport(usage, item, ps));
 	}
 
