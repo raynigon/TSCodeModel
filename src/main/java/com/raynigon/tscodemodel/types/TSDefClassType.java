@@ -23,9 +23,11 @@ public abstract class TSDefClassType implements TSType{
     }
     
     public TSAttribute Attribute(String name, TSType type){
-        TSAttribute attr = new TSAttribute(this, name, type);
+        if(type == null)
+            throw new NullPointerException("Given Type is null");
         if(attributes.containsKey(name))
             throw new KeyAlreadyExistsException("An Attribute with this name already exists");
+        TSAttribute attr = new TSAttribute(this, name, type);
         attributes.put(name, attr);
         return attr;
     }

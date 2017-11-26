@@ -67,7 +67,11 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 	}
 
 	private boolean isDuplicated(TSType inType, List<TSDefClassType> declarations){
+	    if(inType == null)
+	        throw new NullPointerException("InType is null");
         return !declarations.stream().anyMatch((declType)->{
+            if(declType == null)
+                throw new NullPointerException("declType is null");
             return inType.getName().equals(declType.getName());
          });
      }
@@ -94,6 +98,8 @@ public abstract class AbstractCodeBuilder implements TSCodeBuilder{
 		}else{
 			throw new RuntimeException("Unknown Type");
 		}
+		if(usages.contains(null))
+		    throw new NullPointerException("Usage is Null in Class: "+decl.getName());
 		return usages;
 	}
 
